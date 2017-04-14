@@ -46,7 +46,7 @@ if(isset($_POST['name']) ){
     try {
     $conn = new PDO("mysql:host=$serverrname;dbname=tolenhen_bank", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql1 = "INSERT INTO login (username,password) Values('" . $_POST['name'] . "'," . $_POST['psw'] . ")";
+    $sql1 = "INSERT INTO login (username,password) VALUES('" . $_POST['name'] . "'," . $_POST['psw'] . ")";
     $stmt = $conn->prepare($sql1);
     $success = $stmt->execute();
 
@@ -82,6 +82,7 @@ try {
 $conn = null;}
 }
 if(isset($_POST['dValue'])){
+    if($_POST['dValue'] > 0){
     if($_SESSION['logged']){
     try {
     $conn = new PDO("mysql:host=$serverrname;dbname=tolenhen_bank", $username, $password);
@@ -98,7 +99,7 @@ if(isset($_POST['dValue'])){
     }
     
 } catch (Exception $e) {
-    echo "<div id='non'>Not abble to deposit</div>". $e->getMessage();
+    echo "<div id='non'>Not abble to deposit(Check input)</div>". $e->getMessage();
 }
 
     $conn = null;}
@@ -107,12 +108,25 @@ if(isset($_POST['dValue'])){
     }
     
 }
+else{
+    echo "<div id='non'>Invalid ammount!</div>";
+}
+}
+
 if(isset($_POST['wValue'])){
     if($_SESSION['logged']){
     try {
     $conn = new PDO("mysql:host=$serverrname;dbname=tolenhen_bank", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
+    $stmt= "SELECT username,account_type,firstname,lastname,balance FROM account";
+    foreach($conn->query($stmt) as $row){
+        if($_SESSION['user'] == $row['username']){
+           
+            $balance = $row['balance'];
+
+    }}
+    if($balance > $_POST['wValue']){
     $sql1 = "UPDATE account SET balance = balance - ". $_POST['wValue'] ." WHERE username = '" . $_SESSION['user'] . "' " ;
     $stmt = $conn->prepare($sql1);
     $success = $stmt->execute();
@@ -121,6 +135,9 @@ if(isset($_POST['wValue'])){
         echo "<div id='con'>Withdrawal sucessully made!</div>";
     } else {
         echo "<div id='non'>Not to complete withdrawal!</div>";
+    }}
+    else{
+        echo "<div id='non'>Not enough funds in the bank to complete transaction!</div>";
     }
     
 } catch (Exception $e) {
