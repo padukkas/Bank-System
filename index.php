@@ -76,7 +76,7 @@ try {
     }
     
 } catch (Exception $e) {
-    echo "<div id='non'>Not abble to create account!(Username has to be unique)</div>";
+    echo "<div id='non'>Unable to create account!(Username has to be unique)</div>";
 }
 
 $conn = null;}
