@@ -5,9 +5,7 @@ $username = "tolenhen_web";
 $password = "//String password;";
 $fu = false;
 $fp = false;
-
-
-
+ 
 if(isset($_POST['uname'])){
 try {
     $conn = new PDO("mysql:host=$serverrname;dbname=tolenhen_bank", $username, $password);
